@@ -6,6 +6,13 @@ These images were made for the purpose of easily testing and developing with Dru
 
 The Druid images assume Zookeeper is running with the alias `zookeeper` and Derby is running with the alias `derby`.
 
+## Usage
+1. Clone this repo
+2. `cd` into the directory
+3. From the cloned repo run `docker-compose up` to run the cluster. You can also run `docker-compose up --build` to build the images from the local Dockerfiles and then run the cluster (useful for tweaking the files).
+4. Druid should be running with the ports exposed prefixed with a 3 (i.e. 8090 mapped to 38090). You can use `docker ps` to see which ports are opened and where they are mapped to.
+
+
 ## Images
 
 [andremleblanc/druid-broker](https://hub.docker.com/r/andremleblanc/druid-broker/)  
