@@ -47,12 +47,12 @@ services:
       - derby
       - kafka
     volumes:
-      - druid-fs:/tmp
+      - druid-fs:/druid-0.10.0/var/druid/
 
   coordinator:
     image: andremleblanc/druid-coordinator:0.9.2
     build: ./druid-coordinator
-    hostname: coordinator
+    # hostname: coordinator
     networks:
       - druiddb-docker
     ports:
@@ -62,12 +62,12 @@ services:
       - derby
       - kafka
     volumes:
-      - druid-fs:/tmp
+      - druid-fs:/druid-0.10.0/var/druid/
 
   historical:
     image: andremleblanc/druid-historical:0.9.2
     build: ./druid-historical
-    hostname: historical
+    # hostname: historical
     networks:
       - druiddb-docker
     ports:
@@ -77,12 +77,12 @@ services:
       - derby
       - kafka
     volumes:
-      - druid-fs:/tmp
+      - druid-fs:/druid-0.10.0/var/druid/
 
   middlemanager:
     image: andremleblanc/druid-middlemanager:0.9.2
     build: ./druid-middlemanager
-    hostname: middlemanager
+    # hostname: middlemanager
     networks:
       - druiddb-docker
     depends_on:
@@ -90,12 +90,12 @@ services:
       - derby
       - kafka
     volumes:
-      - druid-fs:/tmp
+      - druid-fs:/druid-0.10.0/var/druid/
 
   overlord:
     image: andremleblanc/druid-overlord:0.9.2
     build: ./druid-overlord
-    hostname: overlord
+    # hostname: overlord
     networks:
       - druiddb-docker
     ports:
@@ -105,4 +105,4 @@ services:
       - kafka
       - derby
     volumes:
-      - druid-fs:/tmp
+      - druid-fs:/druid-0.10.0/var/druid/
