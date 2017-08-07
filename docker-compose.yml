@@ -20,9 +20,23 @@ services:
     networks:
       - druiddb-docker
 
+  # kafka:
+  #   image: ches/kafka:0.10.2.1
+  #   hostname: localhost
+  #   networks:
+  #     - druiddb-docker
+  #   ports:
+  #     - '7203:7203'
+  #     - '9092:9092'
+  #   depends_on:
+  #     - zookeeper
+  #   environment:
+  #     ZOOKEEPER_IP: zookeeper
+  #     # KAFKA_ADVERTISED_HOST_NAME: kafka Note: setting this prevented writing to Kafka
+
   kafka:
-    image: ches/kafka:0.10.2.1
-    hostname: localhost
+    image: wurstmeister/kafka:0.10.2.1
+    # hostname: localhost
     networks:
       - druiddb-docker
     ports:
@@ -31,13 +45,16 @@ services:
     depends_on:
       - zookeeper
     environment:
-      ZOOKEEPER_IP: zookeeper
-      # KAFKA_ADVERTISED_HOST_NAME: kafka Note: setting this prevented writing to Kafka
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.1.6
+      # KAFKA_CREATE_TOPICS: "test:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   broker:
     image: andremleblanc/druid-broker:0.9.2
     build: ./druid-broker
-    hostname: broker
+    # hostname: broker
     networks:
       - druiddb-docker
     ports:
