@@ -1,73 +1,109 @@
 version: "3"
 
 networks:
-  druiddb-docker:
+  druiddb:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.238.0/24
+
+volumes:
+  druid-fs:
 
 services:
   zookeeper:
-    image: zookeeper
+    image: zookeeper:3.4
     networks:
-      - druiddb-docker
+      - druiddb
+    ports:
+      - '2181:2181'
 
   derby:
     image: adito/apache-derby
     networks:
-      - druiddb-docker
+      - druiddb
 
   kafka:
-    image: ches/kafka:0.9.0.1
+    image: wurstmeister/kafka:0.10.2.1
     networks:
-      - druiddb-docker
+      druiddb:
+        ipv4_address: 172.16.238.10
+    ports:
+      - '7203:7203'
+      - '9092:9092'
     depends_on:
       - zookeeper
     environment:
-      ZOOKEEPER_IP: zookeeper
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.1.6
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   broker:
     image: andremleblanc/druid-broker:0.9.2
     build: ./druid-broker
     networks:
-      - druiddb-docker
+      - druiddb
     ports:
-      - '38082:8082'
+      - '8082:8082'
     depends_on:
       - zookeeper
+      - derby
+      - kafka
+    volumes:
+      - druid-fs:/druid-0.9.2/var/druid/
 
   coordinator:
     image: andremleblanc/druid-coordinator:0.9.2
     build: ./druid-coordinator
     networks:
-      - druiddb-docker
+      - druiddb
     ports:
-      - '38081:8081'
+      - '8081:8081'
     depends_on:
       - zookeeper
+      - derby
+      - kafka
+    volumes:
+      - druid-fs:/druid-0.9.2/var/druid/
 
   historical:
     image: andremleblanc/druid-historical:0.9.2
     build: ./druid-historical
     networks:
-      - druiddb-docker
+      - druiddb
     ports:
-      - '38083:8083'
+      - '8083:8083'
     depends_on:
       - zookeeper
+      - derby
+      - kafka
+    volumes:
+      - druid-fs:/druid-0.9.2/var/druid/
 
   middlemanager:
     image: andremleblanc/druid-middlemanager:0.9.2
     build: ./druid-middlemanager
     networks:
-      - druiddb-docker
+      - druiddb
     depends_on:
       - zookeeper
+      - derby
+      - kafka
+    volumes:
+      - druid-fs:/druid-0.9.2/var/druid/
 
   overlord:
     image: andremleblanc/druid-overlord:0.9.2
     build: ./druid-overlord
     networks:
-      - druiddb-docker
+      - druiddb
     ports:
-      - '38090:8090'
+      - '8090:8090'
     depends_on:
       - zookeeper
+      - kafka
       - derby
+    volumes:
+      - druid-fs:/druid-0.9.2/var/druid/
