@@ -6,10 +6,10 @@ RUN apt-get install \
 RUN curl -sL https://deb.nodesource.com/setup_8.x
 RUN apt-get install -y nodejs
 
-RUN curl -O http://static.druid.io/artifacts/releases/druid-0.10.0-bin.tar.gz
-RUN tar -xzf druid-0.10.0-bin.tar.gz
+RUN curl -O http://static.druid.io/artifacts/releases/druid-0.9.2-bin.tar.gz
+RUN tar -xzf druid-0.9.2-bin.tar.gz
 
-WORKDIR /druid-0.10.0
+WORKDIR /druid-0.9.2
 RUN bin/init
 
 RUN sed -ri 's/^(\s*)(druid\.zk\.service\.host\s*=\s*localhost\s*$)/\1druid.zk.service.host=zookeeper/' conf-quickstart/druid/_common/common.runtime.properties
