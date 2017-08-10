@@ -2,12 +2,11 @@ version: "3"
 
 networks:
   druiddb:
-    # druiddb_net:
-    #   driver: bridge
-    #   ipam:
-    #     driver: default
-    #     config:
-    #     - subnet: 172.16.238.0/24
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.238.0/24
 
 volumes:
   druid-fs:
@@ -28,7 +27,8 @@ services:
   kafka:
     image: wurstmeister/kafka:0.10.2.1
     networks:
-      - druiddb
+      druiddb:
+        ipv4_address: 172.16.238.10
     ports:
       - '7203:7203'
       - '9092:9092'
