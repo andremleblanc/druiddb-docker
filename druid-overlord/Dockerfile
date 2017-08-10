@@ -1,10 +1,7 @@
-FROM openjdk:8-jdk
-RUN apt-get update
-RUN apt-get install \
+FROM anapsix/alpine-java
+RUN apk update
+RUN apk add \
   curl
-
-RUN curl -sL https://deb.nodesource.com/setup_8.x
-RUN apt-get install -y nodejs
 
 RUN curl -O http://static.druid.io/artifacts/releases/druid-0.9.2-bin.tar.gz
 RUN tar -xzf druid-0.9.2-bin.tar.gz
